@@ -64,7 +64,8 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["comments"] = self.object.comments.all().select_related('author')
+        context["comments"] = self.object.comments.all(
+        ).select_related('author')
         context['form'] = CommentForm()
         return context
 
@@ -84,7 +85,6 @@ class PostCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
     def get_success_url(self):
-        username = self.request.user
         return reverse('blog:profile', args=[self.request.user.username])
 
 
