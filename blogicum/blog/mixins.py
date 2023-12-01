@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
 
@@ -31,8 +31,7 @@ class PostMixin(LoginRequiredMixin):
     pk = 'pk'
 
     def dispatch(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
-        if post.author != self.request.user:
-            return redirect('blog:post_detail',
-                            post_id=self.kwargs['pk'])
+        if self.get_object().author != request.user:
+            return redirect("blog:post_detail",
+                            pk=self.kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)

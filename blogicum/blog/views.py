@@ -75,17 +75,18 @@ class PostDetailView(DetailView):
                     self.post_data.category.is_published))
 
 
-class PostCreateView(CreateView, LoginRequiredMixin):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
-    template_name = 'blog/create.html'
+    template_name = "blog/create.html"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog:profile', args=[self.request.user.username])
+        username = self.request.user
+        return reverse("blog:profile", kwargs={"username": username})
 
 
 class PostUpdateView(PostMixin, UpdateView):
@@ -100,7 +101,7 @@ class PostDeleteView(PostMixin, DeleteView):
         return reverse('blog:profile', args=[self.request.user.username])
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = 'blog/commnet.html'
@@ -149,6 +150,7 @@ class CommentDeleteView(CommentMixin, DeleteView):
 
 class PostCategoryView(ListView):
     model = Post
+    queryset = post_published_query()
     template_name = 'blog/category.html'
     paginate_by = POSTS_ON_PAGE
 
