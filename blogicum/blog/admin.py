@@ -1,31 +1,31 @@
 from django.contrib import admin
 
-# Register your models here.
 from .models import Category, Location, Post, Comment
 
 admin.site.empty_value_display = 'Не задано'
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'title',
-        'pub_date',
-        'author',
-        'location',
-        'category',
+        'text',
         'is_published',
-        'created_at'
+        'category',
+        'location',
+        'author',
     )
     list_editable = (
         'is_published',
         'category',
-        'location'
+        'location',
     )
     search_fields = ('title',)
-    list_filter = ('category', 'author', 'created_at',)
-    list_display_links = ('title',)
+    list_filter = ('category',)
+    list_display_links = ('title', 'author',)
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -37,6 +37,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
 
 
+@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -48,14 +49,9 @@ class LocationAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('text', 'author', 'post',)
     list_editable = ('author', 'post', )
     search_fields = ('author',)
     list_display_links = ('text',)
-
-
-admin.site.register(Post, PostAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Comment, CommentAdmin)

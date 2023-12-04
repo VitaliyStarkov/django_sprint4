@@ -1,37 +1,48 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
+from django.urls import reverse_lazy, reverse
 
-from .models import Comment, Post
-from .forms import PostForm
-from .function import get_post_data
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 
 
-class CommentMixin(LoginRequiredMixin, View):
-    model = Comment
-    template_name = "blog/comment.html"
-    pk_url_kwarg = "comment_pk"
-
-    def dispatch(self, request, *args, **kwargs):
-        if self.get_object().author != request.user:
-            return redirect("blog:post_detail", pk=self.kwargs["pk"])
-        get_post_data(self.kwargs)
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_success_url(self):
-        pk = self.kwargs["pk"]
-        return reverse("blog:post_detail", kwargs={"pk": pk})
+class AuthorCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.get_object().author == self.request.user
 
 
-class PostMixin(LoginRequiredMixin):
+class PostMixin(LoginRequiredMixin, AuthorCheckMixin):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
-    pk = 'pk'
+    pk_url_kwarg = 'post_id'
 
-    def dispatch(self, request, *args, **kwargs):
-        if self.get_object().author != request.user:
-            return redirect("blog:post_detail",
-                            pk=self.kwargs["pk"])
-        return super().dispatch(request, *args, **kwargs)
+    def handle_no_permission(self):
+        return redirect(
+            'blog:post_detail',
+            post_id=self.kwargs[self.pk_url_kwarg]
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(instance=self.object)
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'blog:profile',
+            kwargs={'username': self.request.user.username}
+        )
+
+
+class CommentMixin(LoginRequiredMixin):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment.html'
+    pk_url_kwarg = 'comment_id'
+    parent_post = None
+
+    def get_success_url(self):
+        return reverse(
+            'blog:post_detail', kwargs={'post_id': self.kwargs['post_id']}
+        )
