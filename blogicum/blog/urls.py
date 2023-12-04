@@ -6,8 +6,9 @@ app_name = 'blog'
 
 urlpatterns = [
 
-     path('', views.PostListView.as_view(),
-          name='index'),
+     path(
+         '', views.PostListView.as_view(),
+         name='index'),
 
      path('profile/<str:username>/',
           views.ProfileListView.as_view(), name='profile'),
