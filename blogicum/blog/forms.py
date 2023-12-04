@@ -25,7 +25,7 @@ class PostForm(forms.ModelForm):
             "text": forms.Textarea({"rows": "5"}),
             "pub_date": forms.DateTimeInput(
                 attrs={"type": "datetime-local", "format": "%m/%d/%y %H:%M"}
-                ),
+            ),
         }
 
 
