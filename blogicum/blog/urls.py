@@ -40,3 +40,5 @@ urlpatterns = [path('', views.PostListView.as_view(),
                path('category/<slug:category_slug>/',
                     views.CategoryListView.as_view(), name='category_posts')
                ]
+'''если нажать интер на 7 строчке появляется ошибка pep8 которую исправить
+("E126 continuation line over-indented for hanging indent")'''
