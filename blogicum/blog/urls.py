@@ -5,7 +5,8 @@ from . import views
 app_name = 'blog'
 
 urlpatterns = [
-     path('', views.PostListView.as_view(), name='index'),
+     path('', views.PostListView.as_view(),
+          name='index'),
 
      path('profile/<str:username>/',
           views.ProfileListView.as_view(), name='profile'),
@@ -39,4 +40,4 @@ urlpatterns = [
 
      path('category/<slug:category_slug>/',
           views.CategoryListView.as_view(), name='category_posts')
-]
+     ]
