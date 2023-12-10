@@ -37,7 +37,7 @@ class Category(IsPublishedCreatedAt):
                    'символы латиницы, цифры, дефис и подчёркивание.')
     )
 
-    class Meta:
+    class Meta(IsPublishedCreatedAt.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -123,4 +123,4 @@ class Comment(CreatedAt):
         default_related_name = 'comments'
 
     def __str__(self):
-        return f"Комментарий пользователя {self.author}"
+        return f'Комментарий пользователя {self.author}'

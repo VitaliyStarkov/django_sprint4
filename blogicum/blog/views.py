@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 from django.http import Http404
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
@@ -151,3 +152,9 @@ class CategoryListView(ListView):
         category = self.get_object()
         context['category'] = category
         return context
+
+
+class RegistrationCreateView(CreateView):
+    template_name = "registration/registration_form.html",
+    form_class = UserCreationForm,
+    success_url = reverse_lazy("login"),

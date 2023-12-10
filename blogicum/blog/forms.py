@@ -13,8 +13,8 @@ class CustomUserCreationForm(UserCreationForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email',)
-        exclude = ('password',)
+        fields = ("username", "first_name", "last_name", "email",)
+        exclude = ("password",)
 
 
 class PostForm(forms.ModelForm):
@@ -23,9 +23,8 @@ class PostForm(forms.ModelForm):
         exclude = ("author",)
         widgets = {
             "text": forms.Textarea({"rows": "5"}),
-            "pub_date": forms.DateTimeInput(
-                attrs={"type": "datetime-local", "format": "%m/%d/%y %H:%M"}
-            ),
+            "pub_date": forms.DateTimeInput(format="%Y-%m-%dT%H:%M",
+                                            attrs={"type": "datetime-local"})
         }
 
 
@@ -33,4 +32,4 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('text',)
+        fields = ("text",)
