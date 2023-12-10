@@ -8,7 +8,7 @@ def filter_date_and_publication(queryset):
         pub_date__lte=timezone.now(),
         is_published=True,
         category__is_published=True,
-        )
+    )
 
 
 def annotation_post(queryset):
